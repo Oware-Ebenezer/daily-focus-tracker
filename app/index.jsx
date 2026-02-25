@@ -1,9 +1,16 @@
-import { Text, View } from "react-native";
+import { FloatingButton } from "@/components/FloatingButton";
+import { Header } from "@/components/Header";
+import { ProgressCard } from "@/components/ProgressCard";
 import "@/global.css";
-export default function Index() {
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+export default function HomeScreen() {
+  const router = useRouter();
   return (
-    <View >
-      <Text className="text-green-500 text-2xl">Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <SafeAreaView className="px-2">
+      <Header />
+      <ProgressCard progress={45} />
+      <FloatingButton onPress={() => router.push("/add-task")} />
+    </SafeAreaView>
   );
 }
