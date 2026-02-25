@@ -1,18 +1,16 @@
+import { CircularProgress } from "@/components/CircularProgress";
 import { Text, View } from "react-native";
 
 export const ProgressCard = ({ progress }) => {
   return (
-    <View className="bg-card p-5 rounded-2xl shadow-sm mb-6">
-      <Text className="text-lg font-semibold text-gray-600 ">Great Start</Text>
+    <View className="bg-card p-5 rounded-2xl shadow-sm mb-6 flex-row items-center">
+      <CircularProgress progress={progress} />
 
-      <View className="mt-3">
-        <View className="h-4 bg-gray-200 rounded-full overflow-hidden">
-          <View
-            className="h-4 bg-primary rounded-full"
-            style={{ width: `${progress}%` }}
-          ></View>
-          <Text className="text-gray-500 mt-2">{progress}% completed</Text>
-        </View>
+      <View className="ml-6 flex-1">
+        <Text className="text-lg font-semibold text-gray-800">
+          Great start!
+        </Text>
+        <Text className="text-gray-500 mt-2">Keep focusing on your goals.</Text>
       </View>
     </View>
   );
