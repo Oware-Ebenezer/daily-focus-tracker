@@ -13,6 +13,7 @@ module.exports = {
         primary: "#5B3EFF",
         background: "#F8F9FB",
         card: "#FFF",
+        button: "#EF4444",
       },
     },
   },
