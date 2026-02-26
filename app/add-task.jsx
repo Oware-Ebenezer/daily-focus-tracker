@@ -19,6 +19,14 @@ const PRIORITY_CONFIG = {
   High: { color: "#EF4444", icon: "arrow-up" },
 };
 
+/**
+ * Render a "New Task" screen that collects a title, details, and priority and lets the user save the task.
+ *
+ * The Save action adds the task via TaskContext and navigates back; the save is a no-op if the title is empty or whitespace.
+ * The UI includes inputs for title and details, a three-way priority selector (Low, Medium, High), and a save button.
+ *
+ * @returns {JSX.Element} The rendered "New Task" screen component.
+ */
 export default function AddTaskScreen() {
   const router = useRouter();
   const { addTask } = useContext(TaskContext);

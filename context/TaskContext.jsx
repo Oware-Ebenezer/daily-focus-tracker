@@ -3,6 +3,12 @@ import { loadTasks, saveTasks } from "../services/taskService";
 
 export const TaskContext = createContext();
 
+/**
+ * Provides task state and actions to descendants via TaskContext.
+ *
+ * @param {{ children: React.ReactNode }} props - The provider's children.
+ * @returns {JSX.Element} A TaskContext.Provider that supplies { tasks, addTask, toggleTask } to descendant components.
+ */
 export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
 
