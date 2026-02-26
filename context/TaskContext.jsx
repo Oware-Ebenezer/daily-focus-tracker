@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { loadTasks, saveTasks } from "../services/taskService";
 
 export const TaskContext = createContext();
@@ -18,7 +18,7 @@ export function TaskProvider({ children }) {
     saveTasks(tasks);
   }, [tasks]);
 
-  function addTask(title, details = "") {
+  function addTask(title, details = "", priority = "Medium") {
     const newTask = {
       id: Date.now().toString(),
       title,
@@ -34,10 +34,8 @@ export function TaskProvider({ children }) {
   function toggleTask(id) {
     setTasks((prev) =>
       prev.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
-      )
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
     );
   }
 
