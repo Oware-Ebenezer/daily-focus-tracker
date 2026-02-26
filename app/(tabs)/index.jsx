@@ -6,7 +6,7 @@ import { TaskContext } from "@/context/TaskContext";
 import "@/global.css";
 import { useRouter } from "expo-router";
 import { useContext, useMemo } from "react";
-import { FlatList } from "react-native";
+import { FlatList, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
@@ -25,6 +25,13 @@ export default function HomeScreen() {
       <Header />
       <ProgressCard progress={progress} />
       <FlatList
+        ListHeaderComponent={
+          +(
+            <Text className="text-xl mb-3 font-semibold">
+              Today&apos;s Tasks
+            </Text>
+          )
+        }
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
