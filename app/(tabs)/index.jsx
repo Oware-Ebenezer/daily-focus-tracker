@@ -21,7 +21,7 @@ export default function HomeScreen() {
   }, [tasks]);
 
   return (
-    <SafeAreaView className="px-5 pt-15">
+    <SafeAreaView className="flex-1 px-5 pt-15">
       <Header />
       <ProgressCard progress={progress} />
       <FlatList
