@@ -9,6 +9,15 @@ import { useContext, useMemo } from "react";
 import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+/**
+ * Render the home screen UI that displays task progress, a list of tasks, and a button to add a new task.
+ *
+ * The component reads tasks and a toggle handler from TaskContext, computes the overall completion percentage,
+ * renders a header and progress card, lists tasks with toggle support, and provides a floating button to navigate
+ * to the add-task screen.
+ *
+ * @returns {JSX.Element} The home screen view containing the header, progress indicator, task list, and add-task button.
+ */
 export default function HomeScreen() {
   const router = useRouter();
 
@@ -21,7 +30,7 @@ export default function HomeScreen() {
   }, [tasks]);
 
   return (
-    <SafeAreaView className="px-5 pt-15">
+    <SafeAreaView className="flex-1 px-5 pt-15">
       <Header />
       <ProgressCard progress={progress} />
       <FlatList
