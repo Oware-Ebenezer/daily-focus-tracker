@@ -18,10 +18,7 @@ export const TaskItem = ({ task, onToggle }) => {
   const hasDetails = task.details && task.details.trim().length > 0;
 
   return (
-    <View>
-      <View>
-        <Text className="text-xl mb-3 font-semibold">Today&apos;s Tasks</Text>
-      </View>
+   
     <TouchableOpacity
       onPress={() => onToggle(task.id)}
       className="bg-card p-4 rounded-2xl mb-3 shadow-sm flex-row items-center justify-between"
@@ -50,6 +47,6 @@ export const TaskItem = ({ task, onToggle }) => {
       <View
         className={`w-3 h-3 rounded-full ${getPriorityColor(task.priority)}`}
       />
-    </TouchableOpacity></View>
+    </TouchableOpacity>
   );
 };
