@@ -1,6 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
-import { loadTasks, saveTasks } from "../services/taskService";
-
+import { loadTasks, saveTasks } from "@/services/taskService";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 export const TaskContext = createContext();
 
 /**
@@ -10,43 +9,81 @@ export const TaskContext = createContext();
  * @returns {JSX.Element} A TaskContext.Provider that supplies { tasks, addTask, toggleTask } to descendant components.
  */
 export function TaskProvider({ children }) {
-  const [tasks, setTasks] = useState([]);
-
-  useEffect(() => {
-    async function fetchTasks() {
-      const stored = await loadTasks();
-      setTasks(stored);
-    }
-    fetchTasks();
-  }, []);
-
-  useEffect(() => {
-    saveTasks(tasks);
-  }, [tasks]);
+  const [tasksState, setTasksState] = useState({
+    byId: {},
+    allIds: [],
+  });
 
   function addTask(title, details = "", priority = "Medium") {
+    const id = Date.now().toString();
+
     const newTask = {
-      id: Date.now().toString(),
+      id,
       title,
       details,
+      priority,
       completed: false,
-      priority: "Medium",
       date: new Date().toISOString(),
     };
 
-    setTasks((prev) => [...prev, newTask]);
+    setTasksState((prev) => ({
+      byId: {
+        ...prev.byId,
+        [id]: newTask,
+      },
+      allIds: [...prev.allIds, id],
+    }));
   }
 
   function toggleTask(id) {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task,
-      ),
-    );
+    setTasksState((prev) => ({
+      ...prev,
+      byId: {
+        ...prev.byId,
+        [id]: {
+          ...prev.byId[id],
+          completed: !prev.byId[id].completed,
+        },
+      },
+    }));
   }
 
+  const tasks = useMemo(() => {
+    return tasksState.allIds.map((id) => tasksState.byId[id]);
+  }, [tasksState]);
+
+  const stats = useMemo(() => {
+    const total = tasksState.allIds.length;
+
+    let completed = 0;
+    for (let id of tasksState.allIds) {
+      if (tasksState.byId[id].completed) completed++;
+    }
+
+    return {
+      total,
+      completed,
+      percentage: total === 0 ? 0 : Math.round((completed / total) * 100),
+    };
+  }, [tasksState]);
+  useEffect(() => {
+    loadTasks().then((data) => {
+      if (data) setTasksState(data);
+    });
+  }, []);
+
+  useEffect(()=> {
+    saveTasks(tasksState);  },[tasksState])
+    
   return (
-    <TaskContext.Provider value={{ tasks, addTask, toggleTask }}>
+    <TaskContext.Provider
+      value={{
+        tasks,
+        addTask,
+        toggleTask,
+        stats,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );
