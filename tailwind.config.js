@@ -1,3 +1,5 @@
+const palette = require("./constants/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,15 +11,7 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
-      // Keep in sync with constants/theme.js
-      colors: {
-        background: "#EAECF0",
-        surface: "#FFFFFF",
-        field: "#F4F5F7",
-        primary: "#FE7F2D",
-        slate: "#233D4D",
-        ink: "#000000",
-      },
+      colors: palette,
     },
   },
   plugins: [],

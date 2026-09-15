@@ -4,16 +4,20 @@ import { Header } from "@/components/Header";
 import { ProgressCard } from "@/components/ProgressCard";
 import { Screen } from "@/components/Screen";
 import { TaskItem } from "@/components/TaskItem";
+import { ROUTES } from "@/constants/routes";
 import { useTasks } from "@/hooks/useTasks";
 import { useRouter } from "expo-router";
 import { FlatList, Text, View } from "react-native";
 
 /**
- * Home screen: overall progress, today's task list, and a button to add a task.
+ * Home screen: overall progress, the task list, and a button to add a task.
+ * Renders only the background until storage has been read, so nothing flashes.
  */
 export default function HomeScreen() {
   const router = useRouter();
-  const { tasks, stats, isReady, toggleTask } = useTasks();
+  const { tasks, stats, isReady, persistError, toggleTask } = useTasks();
+
+  if (!isReady) return <Screen />;
 
   return (
     <Screen>
@@ -21,16 +25,26 @@ export default function HomeScreen() {
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TaskItem task={item} onToggle={toggleTask} />
+          <TaskItem
+            task={item}
+            onToggle={toggleTask}
+            onPress={(task) => router.push(ROUTES.task(task.id))}
+          />
         )}
         ListHeaderComponent={
           <View>
             <Header />
+            {persistError && (
+              <View className="bg-slate rounded-xl px-4 py-3 mb-4">
+                <Text className="text-[13px] leading-[18px] text-background">
+                  Changes couldn&apos;t be saved on this device. They will be
+                  lost when the app closes.
+                </Text>
+              </View>
+            )}
             <ProgressCard stats={stats} />
             <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-[17px] font-semibold text-ink">
-                Today&apos;s tasks
-              </Text>
+              <Text className="text-[17px] font-semibold text-ink">Your tasks</Text>
               <View className="h-6 px-2.5 rounded-full bg-slate/10 justify-center">
                 <Text className="text-[13px] font-semibold text-slate">
                   {stats.total}
@@ -40,17 +54,12 @@ export default function HomeScreen() {
           </View>
         }
         ListEmptyComponent={
-          isReady ? (
-            <EmptyState
-              title="No tasks yet"
-              body="Add your first task for today."
-            />
-          ) : null
+          <EmptyState title="No tasks yet" body="Add your first task." />
         }
         contentContainerStyle={{ paddingBottom: 96 }}
         showsVerticalScrollIndicator={false}
       />
-      <FloatingButton onPress={() => router.push("/add-task")} />
+      <FloatingButton onPress={() => router.push(ROUTES.addTask)} />
     </Screen>
   );
 }
