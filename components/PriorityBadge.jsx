@@ -1,8 +1,8 @@
-import { PRIORITY_STYLES } from "@/constants/theme";
+import { DEFAULT_PRIORITY, PRIORITY_STYLES } from "@/constants/priority";
 import { Text, View } from "react-native";
 
 export const PriorityBadge = ({ priority, muted = false }) => {
-  const style = PRIORITY_STYLES[priority] ?? PRIORITY_STYLES.Medium;
+  const style = PRIORITY_STYLES[priority] ?? PRIORITY_STYLES[DEFAULT_PRIORITY];
 
   return (
     <View

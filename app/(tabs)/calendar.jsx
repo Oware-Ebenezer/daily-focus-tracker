@@ -1,12 +1,13 @@
 import { Card } from "@/components/Card";
 import { Screen } from "@/components/Screen";
 import { ScreenTitle } from "@/components/ScreenTitle";
+import { StatValue } from "@/components/StatValue";
 import { useTasks } from "@/hooks/useTasks";
 import { getCalendarParts } from "@/utils/date";
 import { Text, View } from "react-native";
 
 export default function CalendarScreen() {
-  const { stats } = useTasks();
+  const { stats, isReady } = useTasks();
   const today = getCalendarParts();
 
   return (
@@ -32,27 +33,15 @@ export default function CalendarScreen() {
         </View>
       </Card>
 
-      <Card className="p-5">
-        <Text className="text-[17px] font-semibold text-slate mb-4">Today</Text>
-        <View className="flex-row gap-3">
-          <View className="flex-1">
-            <Text className="text-[13px] leading-[18px] font-medium text-slate/60 mb-1">
-              Tasks created
-            </Text>
-            <Text className="text-[28px] leading-[34px] font-bold text-ink">
-              {stats.total}
-            </Text>
+      {isReady && (
+        <Card className="p-5">
+          <Text className="text-[17px] font-semibold text-slate mb-4">Overview</Text>
+          <View className="flex-row gap-3">
+            <StatValue label="Tasks created" value={stats.total} className="flex-1" />
+            <StatValue label="Completed" value={stats.completed} className="flex-1" />
           </View>
-          <View className="flex-1">
-            <Text className="text-[13px] leading-[18px] font-medium text-slate/60 mb-1">
-              Completed
-            </Text>
-            <Text className="text-[28px] leading-[34px] font-bold text-ink">
-              {stats.completed}
-            </Text>
-          </View>
-        </View>
-      </Card>
+        </Card>
+      )}
     </Screen>
   );
 }
