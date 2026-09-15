@@ -1,19 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // NOTE: Update this to include the paths to all files that contain Nativewind classes.
   content: [
-    "./App.tsx",
-    "./components/**/*.{js,jsx,ts,tsx}",
     "./app/**/*.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "./constants/**/*.{js,jsx,ts,tsx}",
+    "./hooks/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      // Keep in sync with constants/theme.js
       colors: {
-        primary: "#5B3EFF",
-        background: "#F8F9FB",
-        card: "#FFF",
-        button: "#EF4444",
+        background: "#EAECF0",
+        surface: "#FFFFFF",
+        field: "#F4F5F7",
+        primary: "#FE7F2D",
+        slate: "#233D4D",
+        ink: "#000000",
       },
     },
   },

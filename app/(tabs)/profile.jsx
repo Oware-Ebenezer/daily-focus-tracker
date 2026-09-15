@@ -1,49 +1,64 @@
+import { Card } from "@/components/Card";
+import { Screen } from "@/components/Screen";
+import { ScreenTitle } from "@/components/ScreenTitle";
+import { colors } from "@/constants/theme";
+import { user } from "@/constants/user";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
+const SettingsRow = ({ icon, label, last = false, onPress }) => (
+  <TouchableOpacity
+    onPress={onPress}
+    activeOpacity={0.7}
+    accessibilityRole="button"
+    className={`h-14 px-4 flex-row items-center ${last ? "" : "border-b border-slate/10"}`}
+  >
+    <Ionicons name={icon} size={22} color={colors.slate} />
+    <Text className="flex-1 ml-3 text-[15px] font-medium text-slate">
+      {label}
+    </Text>
+    <Ionicons name="chevron-forward" size={18} color={colors.slateFaint} />
+  </TouchableOpacity>
+);
+
 export default function ProfileScreen() {
-  const router = useRouter();
   return (
-    <View className="flex-1 bg-background px-5 pt-14">
-      <Text className="text-2xl font-bold text-gray-900 mb-6">Profile</Text>
+    <Screen>
+      <ScreenTitle title="Profile" />
 
-      <View className="bg-card p-6 rounded-2xl shadow-sm mb-8">
-        <View className="flex-row justify-between items-center">
-          <View>
-            <Text className="text-lg font-semibold text-gray-900">
-              Ebenezer
-            </Text>
-            <Text className="text-gray-500">Computer Science Student</Text>
-          </View>
-          <Image
-            className="w-14 h-14 rounded-full border-2 border-amber-300 shadow-sm"
-            source={{
-              uri: "https://avatars.githubusercontent.com/u/181800897?v=4&size=64",
-            }}
-          />
+      <Card className="p-5 mb-4 flex-row items-center">
+        <Image
+          source={{ uri: user.avatarUrl }}
+          accessibilityLabel={user.name}
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            marginRight: 16,
+            backgroundColor: colors.slate,
+          }}
+        />
+        <View>
+          <Text className="text-[17px] leading-[22px] font-semibold text-ink">
+            {user.name}
+          </Text>
+          <Text className="text-[15px] leading-5 text-slate/60 mt-1">
+            {user.title}
+          </Text>
         </View>
-      </View>
+      </Card>
 
-      <View className="bg-card rounded-2xl shadow-sm">
-        <TouchableOpacity className="flex-row justify-between items-center p-5 border-b border-gray-100">
-          <Text className="text-gray-700">Account Settings</Text>
-          <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
-        </TouchableOpacity>
+      <Card className="mb-4">
+        <SettingsRow icon="options-outline" label="Account settings" />
+        <SettingsRow icon="notifications-outline" label="Notifications" last />
+      </Card>
 
-        <TouchableOpacity className="flex-row justify-between items-center p-5 border-b border-gray-100">
-          <Text className="text-gray-700">Notifications</Text>
-          <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="flex-row justify-between items-center p-5"
-        >
-          <Text className="text-button  font-semibold">Logout</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <Card>
+        <View className="h-14 px-4 flex-row items-center">
+          <Ionicons name="log-out-outline" size={22} color={colors.slate} />
+          <Text className="ml-3 text-[15px] font-medium text-slate">Log out</Text>
+        </View>
+      </Card>
+    </Screen>
   );
 }

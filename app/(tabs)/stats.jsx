@@ -1,40 +1,54 @@
-import { TaskContext } from "@/context/TaskContext";
-import { useContext, useMemo } from "react";
+import { Card } from "@/components/Card";
+import { Screen } from "@/components/Screen";
+import { ScreenTitle } from "@/components/ScreenTitle";
+import { StatTile } from "@/components/StatTile";
+import { useTasks } from "@/hooks/useTasks";
 import { Text, View } from "react-native";
 
-export default function StatScreen() {
-  const { tasks } = useContext(TaskContext);
+export default function StatsScreen() {
+  const { stats } = useTasks();
 
-  const stats = useMemo(() => {
-    const total = tasks.length;
-    const completed = tasks.filter((t) => t.completed).length;
-    const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
-    return { total, completed, percentage };
-  }, [tasks]);
+  const remainingLabel =
+    stats.total === 0
+      ? "Add a task to start tracking progress."
+      : stats.remaining === 0
+        ? "Everything is done for today."
+        : `${stats.remaining} ${stats.remaining === 1 ? "task" : "tasks"} left to reach 100% for today.`;
+
   return (
-    <View className="flex-1 px-5 pt-14 bg-background">
-      <Text className="text-xl font-bold text-gray-900 mb-6">Statistics</Text>
+    <Screen>
+      <ScreenTitle title="Statistics" subtitle="Today" />
 
-      <View className="bg-card p-6 rounded-xl shadow-sm mb-4">
-        <Text className="text-gray-500 mb-2">Completion Rate</Text>
-        <Text className="text-2xl font-bold text-primary">
-          {stats.percentage}%
-        </Text>
+      <View className="flex-row gap-3 mb-3">
+        <StatTile label="Total tasks" value={stats.total} className="flex-1" />
+        <StatTile label="Completed" value={stats.completed} className="flex-1" />
+      </View>
+      <View className="flex-row gap-3 mb-5">
+        <StatTile label="Remaining" value={stats.remaining} className="flex-1" />
+        <StatTile
+          label="Completion rate"
+          value={`${stats.percentage}%`}
+          className="flex-1"
+        />
       </View>
 
-      <View className="bg-card p-6 rounded-xl shadow-sm mb-4">
-        <View className="flex-row justify-between mb-3">
-          <Text className="text-gray-500 mb-2">Total Tasks</Text>
-          <Text className="text-2xl font-bold text-primary">{stats.total}</Text>
-        </View>
-
-        <View className="flex-row justify-between">
-          <Text className="text-gray-600">Completed</Text>
-          <Text className="text-2xl font-bold text-primary">
-            {stats.completed}
+      <Card className="p-5">
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className="text-[17px] font-semibold text-slate">Progress</Text>
+          <Text className="text-[15px] font-semibold text-ink">
+            {stats.completed} / {stats.total}
           </Text>
         </View>
-      </View>
-    </View>
+        <View className="h-2 rounded-full bg-background overflow-hidden">
+          <View
+            className="h-2 rounded-full bg-primary"
+            style={{ width: `${stats.percentage}%` }}
+          />
+        </View>
+        <Text className="text-[13px] leading-[18px] text-slate/60 mt-3">
+          {remainingLabel}
+        </Text>
+      </Card>
+    </Screen>
   );
 }
