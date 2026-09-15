@@ -1,54 +1,53 @@
+import { colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const TAB_BAR_HEIGHT = 56;
+
+const TABS = [
+  { name: "index", title: "Home", icon: "home" },
+  { name: "calendar", title: "Calendar", icon: "calendar" },
+  { name: "stats", title: "Stats", icon: "bar-chart" },
+  { name: "profile", title: "Profile", icon: "person" },
+];
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#5b3eff",
+        sceneStyle: { backgroundColor: colors.background },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.tabInactive,
+        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
         tabBarStyle: {
-          height: 70,
-          paddingBottom: 10,
+          backgroundColor: colors.slate,
+          borderTopWidth: 0,
+          height: TAB_BAR_HEIGHT + insets.bottom,
+          paddingBottom: insets.bottom,
+          paddingTop: 8,
         },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: "Calendar",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: "Stats",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="bar-chart-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />
+      {TABS.map(({ name, title, icon }) => (
+        <Tabs.Screen
+          key={name}
+          name={name}
+          options={{
+            title,
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? icon : `${icon}-outline`}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

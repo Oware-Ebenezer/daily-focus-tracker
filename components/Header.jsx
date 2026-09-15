@@ -1,23 +1,28 @@
-import { Image, Text, View } from "react-native";
+import { ScreenTitle } from "@/components/ScreenTitle";
+import { colors } from "@/constants/theme";
+import { user } from "@/constants/user";
+import { formatHeaderDate } from "@/utils/date";
+import { Image } from "react-native";
 
 export const Header = () => {
-  const getFormattedDate = () => {
-    const options = { weekday: "long", month: "long", day: "numeric" };
-    return new Date().toLocaleDateString(undefined, options);
-  }
-  
   return (
-    <View className="flex-row items-center justify-between mb-6 ">
-      <View>
-        <Text className="text-2xl font-bold text-gray-900">Daily Focus</Text>
-        <Text className="text-gray-600 mt-1">{getFormattedDate()}</Text>
-      </View>
-      <Image
-        className="w-10 h-10 rounded-full"
-        source={{
-          uri: "https://avatars.githubusercontent.com/u/181800897?v=4&size=64",
-        }}
-      />
-    </View>
+    <ScreenTitle
+      title="Daily Focus"
+      subtitle={formatHeaderDate()}
+      right={
+        <Image
+          source={{ uri: user.avatarUrl }}
+          accessibilityLabel={user.name}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            borderWidth: 1,
+            borderColor: colors.border,
+            backgroundColor: colors.surface,
+          }}
+        />
+      }
+    />
   );
 };

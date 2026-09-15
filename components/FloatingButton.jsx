@@ -1,12 +1,24 @@
-import { Text, TouchableOpacity } from "react-native";
+import { colors } from "@/constants/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 export const FloatingButton = ({ onPress }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="absolute bottom-8 right-6 w-14 h-14 bg-primary rounded-full items-center justify-center shadow-lg"
+      activeOpacity={0.8}
+      accessibilityRole="button"
+      accessibilityLabel="Add task"
+      className="absolute bottom-6 right-5 w-14 h-14 bg-primary rounded-full items-center justify-center"
+      style={{
+        shadowColor: colors.slate,
+        shadowOpacity: 0.18,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        elevation: 6,
+      }}
     >
-      <Text className="text-white text-2xl font-bold">+</Text>
+      <Ionicons name="add" size={28} color={colors.ink} />
     </TouchableOpacity>
   );
 };

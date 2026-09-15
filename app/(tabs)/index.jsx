@@ -1,54 +1,56 @@
+import { EmptyState } from "@/components/EmptyState";
 import { FloatingButton } from "@/components/FloatingButton";
 import { Header } from "@/components/Header";
 import { ProgressCard } from "@/components/ProgressCard";
+import { Screen } from "@/components/Screen";
 import { TaskItem } from "@/components/TaskItem";
-import { TaskContext } from "@/context/TaskContext";
-import "@/global.css";
+import { useTasks } from "@/hooks/useTasks";
 import { useRouter } from "expo-router";
-import { useContext, useMemo } from "react";
-import { FlatList, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, Text, View } from "react-native";
 
 /**
- * Render the home screen UI that displays task progress, a list of tasks, and a button to add a new task.
- *
- * The component reads tasks and a toggle handler from TaskContext, computes the overall completion percentage,
- * renders a header and progress card, lists tasks with toggle support, and provides a floating button to navigate
- * to the add-task screen.
- *
- * @returns {JSX.Element} The home screen view containing the header, progress indicator, task list, and add-task button.
+ * Home screen: overall progress, today's task list, and a button to add a task.
  */
 export default function HomeScreen() {
   const router = useRouter();
-
-  const { tasks, toggleTask } = useContext(TaskContext);
-
-  const progress = useMemo(() => {
-    if (tasks.length === 0) return 0;
-    const completed = tasks.filter((t) => t.completed).length;
-    return Math.round((completed / tasks.length) * 100);
-  }, [tasks]);
+  const { tasks, stats, isReady, toggleTask } = useTasks();
 
   return (
-    <SafeAreaView className="flex-1 px-5 pt-15">
-      <Header />
-      <ProgressCard progress={progress} />
+    <Screen>
       <FlatList
-        ListHeaderComponent={
-          +(
-            <Text className="text-xl mb-3 font-semibold">
-              Today&apos;s Tasks
-            </Text>
-          )
-        }
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TaskItem task={item} onToggle={toggleTask} />
         )}
+        ListHeaderComponent={
+          <View>
+            <Header />
+            <ProgressCard stats={stats} />
+            <View className="flex-row items-center justify-between mb-3">
+              <Text className="text-[17px] font-semibold text-ink">
+                Today&apos;s tasks
+              </Text>
+              <View className="h-6 px-2.5 rounded-full bg-slate/10 justify-center">
+                <Text className="text-[13px] font-semibold text-slate">
+                  {stats.total}
+                </Text>
+              </View>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          isReady ? (
+            <EmptyState
+              title="No tasks yet"
+              body="Add your first task for today."
+            />
+          ) : null
+        }
+        contentContainerStyle={{ paddingBottom: 96 }}
         showsVerticalScrollIndicator={false}
       />
       <FloatingButton onPress={() => router.push("/add-task")} />
-    </SafeAreaView>
+    </Screen>
   );
 }
